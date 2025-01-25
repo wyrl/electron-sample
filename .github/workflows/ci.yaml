@@ -24,3 +24,6 @@ jobs:
 
     # - name: Run tests
     #   run: npm test
+
+    - name: Electron Build
+      run: npm run electron-build
