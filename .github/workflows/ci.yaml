@@ -27,15 +27,22 @@ jobs:
 
     # - name: Run tests
     #   run: npm test
+    - name: Install Wine
+      run: |
+        sudo dpkg --add-architecture i386
+        sudo apt update
+        sudo apt install -y wine64 wine32
 
-    - name: Electron Build Default
+    - name: Electron Build
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npm run dist
-    - name: Electron Build for Windows
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npm run dist -- -w
+      run: |
+        npm run dist
+         npm run dist -- -w
+    # - name: Electron Build for Windows
+    #   env:
+    #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    #   run: npm run dist -- -w
 
     - name: Upload Electron Build Artifacts
       uses: actions/upload-artifact@v4
