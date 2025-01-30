@@ -28,7 +28,12 @@ jobs:
     # - name: Run tests
     #   run: npm test
 
-    - name: Electron Build
+    - name: Electron Build Default
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: npm run dist
+    - name: Electron Build for Window
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: npm run dist -- -w
+
