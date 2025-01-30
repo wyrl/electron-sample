@@ -38,7 +38,7 @@ jobs:
       run: npm run dist -- -w
 
     - name: Upload Electron Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: electron-build-artifacts
         path: dist-electron/
