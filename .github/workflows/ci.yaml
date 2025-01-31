@@ -1,4 +1,4 @@
-name: Build Electron App
+name: Build and Release Electron App
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,12 +26,6 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-
-    # - name: Install Wine
-    #   run: |
-    #     sudo dpkg --add-architecture i386
-    #     sudo apt update
-    #     sudo apt install -y wine64 wine32
 
     - name: Electron Build for Linux
       env:
@@ -72,3 +66,53 @@ jobs:
       with:
         name: electron-build-artifacts-windows
         path: dist-electron/
+
+  create-release:
+    needs: [build-linux, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download Linux Build Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: electron-build-artifacts-linux
+        path: dist-electron/
+
+    - name: Download Windows Build Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: electron-build-artifacts-windows
+        path: dist-electron/
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.0
+        release_name: Release v1.0.0
+        draft: false
+        prerelease: false
+
+    - name: Upload Linux Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist-electron/MyAngularApp-0.0.0.AppImage
+        asset_name: MyAngularApp-0.0.0.AppImage
+        asset_content_type: application/octet-stream
+
+    - name: Upload Windows Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist-electron/MyAngularApp-0.0.0.exe
+        asset_name: MyAngularApp-0.0.0.exe
+        asset_content_type: application/octet-stream
