@@ -39,7 +39,7 @@ jobs:
       run: npm run dist -- -l
 
     - name: Upload Linux Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: electron-build-artifacts-linux
         path: dist-electron/
@@ -68,7 +68,7 @@ jobs:
       run: npm run dist -- -w
 
     - name: Upload Windows Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: electron-build-artifacts-windows
         path: dist-electron/
