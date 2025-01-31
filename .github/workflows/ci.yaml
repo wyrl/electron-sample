@@ -27,11 +27,11 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Install Wine
-      run: |
-        sudo dpkg --add-architecture i386
-        sudo apt update
-        sudo apt install -y wine64 wine32
+    # - name: Install Wine
+    #   run: |
+    #     sudo dpkg --add-architecture i386
+    #     sudo apt update
+    #     sudo apt install -y wine64 wine32
 
     - name: Electron Build for Linux
       env:
