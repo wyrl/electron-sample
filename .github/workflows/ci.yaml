@@ -1,10 +1,12 @@
-name: CI
+name: Build Electron App
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
@@ -25,28 +27,48 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    # - name: Run tests
-    #   run: npm test
     - name: Install Wine
       run: |
         sudo dpkg --add-architecture i386
         sudo apt update
         sudo apt install -y wine64 wine32
 
-    - name: Electron Build
+    - name: Electron Build for Linux
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: |
-        npm run dist
-         npm run dist -- -w
-    # - name: Electron Build for Windows
-    #   env:
-    #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    #   run: npm run dist -- -w
+      run: npm run dist -- -l
 
-    - name: Upload Electron Build Artifacts
-      uses: actions/upload-artifact@v4
+    - name: Upload Linux Build Artifacts
+      uses: actions/upload-artifact@v3
       with:
-        name: electron-build-artifacts
+        name: electron-build-artifacts-linux
         path: dist-electron/
 
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '23'
+
+    - name: Install Angular CLI
+      run: npm install -g @angular/cli
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Electron Build for Windows
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: npm run dist -- -w
+
+    - name: Upload Windows Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: electron-build-artifacts-windows
+        path: dist-electron/
