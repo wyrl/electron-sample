@@ -119,6 +119,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist-electron/MyAngularApp-0.0.0.exe
+        asset_path: dist-electron/MyAngularApp\ Setup\ 0.0.0.exe
         asset_name: MyAngularApp-0.0.0.exe
         asset_content_type: application/octet-stream
