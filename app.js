@@ -24,7 +24,7 @@ function createWindow() {
   mainWindow.loadURL('http://localhost:3000');
 
   // Hide the menu bar
-  mainWindow.setMenuBarVisibility(false);
+  //mainWindow.setMenuBarVisibility(false);
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
