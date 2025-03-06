@@ -19,7 +19,9 @@
     },
     "files": [
       "dist/electron-sample/**/*",
-      "app.js"
+      "mylib/**/*",
+      "app.js",
+      "backend.js"
     ],
     "win": {
       "target": "nsis"
@@ -41,7 +43,9 @@
     "@angular/platform-browser": "^19.1.0",
     "@angular/platform-browser-dynamic": "^19.1.0",
     "@angular/router": "^19.1.0",
+    "cors": "^2.8.5",
     "express": "^4.21.2",
+    "kill-port": "^2.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
