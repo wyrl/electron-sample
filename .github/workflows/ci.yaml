@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "ci.yaml"
+      - '.github/workflows/ci.yaml'
   # pull_request:
   #   branches:
   #     - main
