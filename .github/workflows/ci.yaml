@@ -1,45 +1,16 @@
 name: Build and Release Electron App
 
+env:
+  VERSION: 1.0.1
+
 on:
   push:
     branches:
       - main
     paths:
       - '.github/workflows/ci.yaml'
-  # pull_request:
-  #   branches:
-  #     - main
 
 jobs:
-  # build-linux:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - name: Checkout repository
-  #     uses: actions/checkout@v2
-
-  #   - name: Set up Node.js
-  #     uses: actions/setup-node@v2
-  #     with:
-  #       node-version: '23'
-
-  #   - name: Install Angular CLI
-  #     run: npm install -g @angular/cli
-
-  #   - name: Install dependencies
-  #     run: npm install
-
-  #   - name: Electron Build for Linux
-  #     env:
-  #       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-  #     run: npm run dist
-
-  #   - name: Upload Linux Build Artifacts
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: electron-build-artifacts-linux
-  #       path: dist-electron/
-
   build-windows:
     runs-on: windows-latest
 
@@ -70,17 +41,12 @@ jobs:
           path: dist-electron/
 
   create-release:
-    needs: [build-windows] #[build-linux, build-windows]
+    needs: [build-windows]
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      # - name: Download Linux Build Artifacts
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: electron-build-artifacts-linux
-      #     path: dist-electron/
 
       - name: Download Windows Build Artifacts
         uses: actions/download-artifact@v4
@@ -94,20 +60,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          tag_name: v1.0.1
-          release_name: Release v1.0.1
+          tag_name: v${VERSION}
+          release_name: Release v${VERSION}
           draft: false
           prerelease: false
-
-      # - name: Upload Linux Release Asset
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: dist-electron/MyAngularApp-0.0.0.AppImage
-      #     asset_name: MyAngularApp-0.0.0.AppImage
-      #     asset_content_type: application/octet-stream
 
       - name: Upload Windows Release Asset
         uses: actions/upload-release-asset@v1
@@ -115,6 +71,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "dist-electron/MyAngularApp Setup 1.0.1.exe"
-          asset_name: MyAngularApp-1.0.1.exe
+          asset_path: "dist-electron/MyAngularApp Setup ${VERSION}.exe"
+          asset_name: MyAngularApp-${VERSION}.exe
           asset_content_type: application/octet-stream
